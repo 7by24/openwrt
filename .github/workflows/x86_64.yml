@@ -75,13 +75,14 @@ jobs:
         chmod +x $DIY_NETWORK_SH
         cd openwrt
         $GITHUB_WORKSPACE/$DIY_NETWORK_SH
-        
-    - name: SSH connection to Actions
-      uses: rdp-studio/ssh2actions@main
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+      
+    # 取消ssh链接
+    # - name: SSH connection to Actions
+    #   uses: rdp-studio/ssh2actions@main
+    #   if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
+    #   env:
+    #     TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    #     TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     
     - name: Download package
       id: package
@@ -143,23 +144,24 @@ jobs:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
 
-    - name: Upload firmware to cowtransfer
-      id: cowtransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
-        echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
-        echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
+    # 取消快传服务
+    # - name: Upload firmware to cowtransfer
+    #   id: cowtransfer
+    #   if: steps.organize.outputs.status == 'success' && env.UPLOAD_COWTRANSFER == 'true' && !cancelled()
+    #   run: |
+    #     curl -fsSL git.io/file-transfer | sh
+    #     ./transfer cow --block 2621440 -s -p 64 --no-progress ${FIRMWARE} 2>&1 | tee cowtransfer.log
+    #     echo "::warning file=cowtransfer.com::$(cat cowtransfer.log | grep https)"
+    #     echo "::set-output name=url::$(cat cowtransfer.log | grep https | cut -f3 -d" ")"
         
-    - name: Upload firmware to WeTransfer
-      id: wetransfer
-      if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
-      run: |
-        curl -fsSL git.io/file-transfer | sh
-        ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
-        echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
-        echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
+    # - name: Upload firmware to WeTransfer
+    #   id: wetransfer
+    #   if: steps.organize.outputs.status == 'success' && env.UPLOAD_WETRANSFER == 'true' && !cancelled()
+    #   run: |
+    #     curl -fsSL git.io/file-transfer | sh
+    #     ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
+    #     echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
+    #     echo "::set-output name=url::$(cat wetransfer.log | grep https | cut -f3 -d" ")"
         
     - name: Generate release tag
       id: tag
@@ -171,6 +173,7 @@ jobs:
         [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
         echo "::set-output name=status::success"
     
+    # 取消docker hub上传，只发布release包
     # - name: Build & Push Docker Image To Dockerhub
     #   run: |
     #       cd openwrt/bin/targets/$TARGET/$SUBTARGET
