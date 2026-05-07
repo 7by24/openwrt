@@ -30,7 +30,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-24.04
-
+    permissions:
+      contents: write
     steps:
     - name: Checkout
       uses: actions/checkout@master
@@ -180,6 +181,8 @@ jobs:
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v3
       if: steps.tag.outputs.status == 'success' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
       with:
         token: ${{ secrets.ACTION_TOKEN }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
@@ -195,6 +198,8 @@ jobs:
     - name: Remove old Releases
       uses: Nats-ji/delete-old-releases@v1.0.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
+      env:
+        GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
       with:
         keep-count: 2
         keep-old-minor-releases: false
