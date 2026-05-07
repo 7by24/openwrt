@@ -203,6 +203,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.ACTION_TOKEN }}
       with:
+        repo: 7by24/openwrt
         keep_latest: 2
         # token: ${{ secrets.ACTION_TOKEN }}
         
