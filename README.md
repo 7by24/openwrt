@@ -18,4 +18,4 @@
 
   
 ### 状态
-![x86_64 build action](https://github.com/7by24/openwrt/workflows/x86_64/badge.svg)
+[![x86_64 build](https://github.com/7by24/openwrt/actions/workflows/x86_64.yml/badge.svg)](https://github.com/7by24/openwrt/actions/workflows/x86_64.yml)
