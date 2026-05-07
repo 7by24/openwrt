@@ -18,4 +18,4 @@
 
   
 ### 状态
-![x86_64-openwrt autobuild action](https://github.com/7by24/openwrt/workflows/openwrt%20autobuild%20action/badge.svg)
+![x86_64 build action](https://github.com/7by24/openwrt/workflows/x86_64/badge.svg)
