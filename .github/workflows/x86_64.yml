@@ -8,7 +8,7 @@
 # Description: Build OpenWrt using GitHub Actions
 #
 
-name: x86_64-openwrt autobuild action
+name: x86_64 build action
 
 on:
   repository_dispatch:
@@ -27,9 +27,9 @@ env:
   REPO_BRANCH: master
   DEVICE: openwrt-x86-64-generic
   FEEDS_CONF: feeds.conf.default
-  CONFIG_FILE: config/x86_64/x86_64-openwrt.config
-  DIY_P1_SH: diy-part1.sh
-  DIY_P2_SH: diy-part2.sh
+  CONFIG_FILE: config/x86_64.config
+  DIY_FEEDS_SH: diy-feeds.sh
+  DIY_NETWORK_SH: diy-network.sh
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: false
   UPLOAD_COWTRANSFER: false
@@ -39,7 +39,7 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Checkout
@@ -68,9 +68,9 @@ jobs:
     - name: Load custom feeds
       run: |
         [ -e $FEEDS_CONF ] && mv $FEEDS_CONF openwrt/feeds.conf.default
-        chmod +x $DIY_P1_SH
+        chmod +x $DIY_FEEDS_SH
         cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P1_SH
+        $GITHUB_WORKSPACE/$DIY_FEEDS_SH
     - name: Update feeds
       run: cd openwrt && ./scripts/feeds update -a
 
@@ -81,9 +81,9 @@ jobs:
       run: |
         [ -e files ] && mv files openwrt/files
         [ -e $CONFIG_FILE ] && mv $CONFIG_FILE openwrt/.config
-        chmod +x $DIY_P2_SH
+        chmod +x $DIY_NETWORK_SH
         cd openwrt
-        $GITHUB_WORKSPACE/$DIY_P2_SH
+        $GITHUB_WORKSPACE/$DIY_NETWORK_SH
         
     - name: SSH connection to Actions
       uses: P3TERX/ssh2actions@v1.0.0
@@ -180,12 +180,12 @@ jobs:
         [ $UPLOAD_WETRANSFER = true ] && echo "🔗 [WeTransfer](${{ steps.wetransfer.outputs.url }})" >> release.txt
         echo "::set-output name=status::success"
     
-    - name: Build & Push Docker Image To Dockerhub
-      run: |
-          cd openwrt/bin/targets/$TARGET/$SUBTARGET
-          docker import $DEVICE-rootfs.tar.gz ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64
-          echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64
+    # - name: Build & Push Docker Image To Dockerhub
+    #   run: |
+    #       cd openwrt/bin/targets/$TARGET/$SUBTARGET
+    #       docker import $DEVICE-rootfs.tar.gz ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64
+    #       echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    #       docker push ${{ secrets.DOCKERHUB_USERNAME }}/openwrt:x86_64
           
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v1
