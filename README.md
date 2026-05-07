@@ -6,7 +6,6 @@
 
 本项目基于 
 [Lean's OpenWrt](https://github.com/coolsnowwolf/lede) 
-[P3TERX/Action-OpenWrt](https://github.com/P3TERX/Actions-OpenWrt)
 
 
 ### 说明

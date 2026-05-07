@@ -1,13 +1,3 @@
-#
-# Copyright (c) 2019-2020 P3TERX <https://p3terx.com>
-#
-# This is free software, licensed under the MIT License.
-# See /LICENSE for more information.
-#
-# https://github.com/P3TERX/Actions-OpenWrt
-# Description: Build OpenWrt using GitHub Actions
-#
-
 name: x86_64 build action
 
 on:
@@ -20,7 +10,7 @@ on:
         required: false
         default: 'false'
   schedule:
-    - cron: 0 8 1 * ?
+    - cron: 0 8 1 * *
 
 env:
   REPO_URL: https://github.com/coolsnowwolf/lede
@@ -86,7 +76,7 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_NETWORK_SH
         
     - name: SSH connection to Actions
-      uses: P3TERX/ssh2actions@v1.0.0
+      uses: rdp-studio/ssh2actions@main
       if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh  != 'false') || contains(github.event.action, 'ssh')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -190,9 +180,8 @@ jobs:
     - name: Upload firmware to release
       uses: softprops/action-gh-release@v3
       if: steps.tag.outputs.status == 'success' && !cancelled()
-      env:
-        token: ${{ secrets.ACTION_TOKEN }}
       with:
+        token: ${{ secrets.ACTION_TOKEN }}
         tag_name: ${{ steps.tag.outputs.release_tag }}
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
@@ -204,10 +193,10 @@ jobs:
         keep_minimum_runs: 3
 
     - name: Remove old Releases
-      uses: dev-drprasad/delete-older-releases@v0.1.0
+      uses: Nats-ji/delete-old-releases@v1.0.1
       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
       with:
-        keep_latest: 1
-        delete_tags: true
-      env:
+        keep-count: 2
+        keep-old-minor-releases: false
         token: ${{ secrets.ACTION_TOKEN }}
+        
