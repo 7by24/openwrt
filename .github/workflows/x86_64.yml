@@ -191,11 +191,11 @@ jobs:
         body_path: release.txt
         files: ${{ env.FIRMWARE }}/*
 
-    - name: Delete workflow runs
-      uses: GitRML/delete-workflow-runs@main
-      with:
-        retain_days: 1
-        keep_minimum_runs: 3
+    # - name: Delete workflow runs
+    #   uses: GitRML/delete-workflow-runs@main
+    #   with:
+    #     retain_days: 1
+    #     keep_minimum_runs: 3
 
     - name: Remove old Releases
       uses: 7by24/delete-older-releases@v1
