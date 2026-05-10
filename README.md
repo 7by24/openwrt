@@ -9,12 +9,12 @@
 
 
 ### 说明
-- 主要用于x86旁路由，每周日更新
-- 精简组件，仅保留科学看书插件ssr-plus, openclash, privoxy
+- x86旁路由
+- 精简组件，仅保留科学看书插件ssr-plus, privoxy
 - 默认argon皮肤
 
 ### 问题
-
+- set-output的异常提示未处理
   
 ### 状态
 [![x86_64 build](https://github.com/7by24/openwrt/actions/workflows/x86_64.yml/badge.svg)](https://github.com/7by24/openwrt/actions/workflows/x86_64.yml)
