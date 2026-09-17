@@ -18,5 +18,5 @@
 
 sed -i 's|^src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-25.12|#&|' feeds.conf.default
 sed -i '$a src-git luci https://github.com/coolsnowwolf/luci.git;openwrt-24.10' feeds.conf.default
-sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
+# sed -i '$a src-git helloworld https://github.com/fw876/helloworld.git' feeds.conf.default
 
